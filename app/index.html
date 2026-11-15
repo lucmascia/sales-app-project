@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Manticello Vendas</title>
+  <meta name="theme-color" content="#1f3326">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Vendas">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <nav aria-label="Telas">
+      <button type="button" class="tab" data-view="sell">Vender</button>
+      <button type="button" class="tab" data-view="closing">Fechamento</button>
+      <button type="button" class="tab" data-view="settings">Ajustes</button>
+    </nav>
+    <button type="button" id="sync-status" data-pending="0" aria-label="Tudo enviado">✓</button>
+  </header>
+
+  <main>
+    <!-- Vender -->
+    <section id="view-sell" class="view" hidden>
+      <div id="sell-empty" class="notice" hidden>
+        <p><strong>Conecte o app à planilha</strong> para ver os produtos.</p>
+        <button type="button" class="primary" data-view="settings">Abrir Ajustes</button>
+      </div>
+      <div id="products" class="products"></div>
+      <div class="checkout">
+        <ul id="cart" class="cart" aria-label="Carrinho"></ul>
+        <div id="sale-done" class="sale-done" role="status" hidden>
+          <span><strong>Venda registrada</strong><small id="sale-done-detail"></small></span>
+          <button type="button" id="sale-undo">Desfazer</button>
+        </div>
+        <div class="total-row">
+          <button type="button" id="cart-total" class="total" disabled>Total R$ 0,00</button>
+          <button type="button" id="cart-clear" class="ghost" hidden>Limpar</button>
+        </div>
+        <div id="payments" class="payments" role="group" aria-label="Forma de pagamento"></div>
+      </div>
+    </section>
+
+    <!-- Fechamento -->
+    <section id="view-closing" class="view scroll" hidden>
+      <div class="closing-head">
+        <label class="field inline">
+          <span>Dia</span>
+          <input type="date" id="closing-date">
+        </label>
+        <button type="button" id="closing-refresh" class="primary">Atualizar</button>
+      </div>
+      <div id="closing-notices"></div>
+      <div id="closing-totals"></div>
+      <div class="card">
+        <h2>Custo da feira</h2>
+        <div class="fee-row">
+          <input type="text" inputmode="decimal" id="fee-pct" aria-label="Percentual da feira">
+          <span class="fee-op">% + R$</span>
+          <input type="text" inputmode="decimal" id="fee-fixed" aria-label="Valor fixo da feira">
+          <span class="fee-op">=</span>
+          <strong data-total="feira">R$ 0,00</strong>
+        </div>
+        <p class="hint">O que a feira cobra: um percentual do líquido do dia mais um valor fixo. Ajuste para cada feira.</p>
+      </div>
+      <div id="closing-sales"></div>
+    </section>
+
+    <!-- Ajustes -->
+    <section id="view-settings" class="view scroll" hidden>
+      <div class="card">
+        <h2>Planilha</h2>
+        <label class="field">
+          <span>Link do script</span>
+          <input type="url" id="script-url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://script.google.com/macros/s/…/exec">
+        </label>
+        <label class="field">
+          <span>Seu nome</span>
+          <input type="text" id="seller-name" autocomplete="off" placeholder="Quem vende neste celular">
+        </label>
+        <button type="button" id="save-settings" class="primary">Salvar e testar</button>
+        <p id="settings-status" class="status" role="status"></p>
+      </div>
+      <div class="card">
+        <h2>Envio</h2>
+        <p id="settings-pending" class="status"></p>
+        <button type="button" id="send-now" class="primary">Enviar agora</button>
+      </div>
+      <div class="card" id="share-card" hidden>
+        <h2>Configurar outro celular</h2>
+        <p class="hint">Envie este link para o outro celular (por WhatsApp, por exemplo). No Android, abrir o link já liga o app à planilha. No iPhone, instale o app na Tela de Início primeiro e cole este link no campo “Link do script”. Não compartilhe com mais ninguém: quem tem o link consegue lançar vendas.</p>
+        <input type="text" id="share-link" readonly>
+        <button type="button" id="share-copy" class="ghost">Compartilhar link</button>
+      </div>
+      <p class="hint center" id="app-version"></p>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+
+  <dialog id="discount-dialog">
+    <form method="dialog" id="discount-form">
+      <h2>Valor final da venda</h2>
+      <p class="hint" id="discount-hint"></p>
+      <label class="field">
+        <span>Valor final</span>
+        <input type="text" inputmode="decimal" id="discount-input" autocomplete="off">
+      </label>
+      <p id="discount-error" class="error" role="alert"></p>
+      <div class="dialog-actions">
+        <button type="submit" class="primary">Aplicar</button>
+        <button type="button" id="discount-remove" class="ghost">Sem desconto</button>
+        <button type="button" id="discount-close" class="ghost">Fechar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
